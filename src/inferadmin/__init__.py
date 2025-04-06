@@ -1,2 +1,6 @@
 def main() -> None:
-    print("Hello from inferadmin!")
+    import uvicorn
+    uvicorn.run(app="inferadmin.main:app")
+
+if __name__ == "__main__":
+    main()
