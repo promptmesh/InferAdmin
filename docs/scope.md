@@ -44,6 +44,7 @@
 - Nvidia docker toolkit installed
 - Refresh interval for gpu state
 - Refresh interval for container state
+- HF token
 
 ## Operating Data
 - What assets are deployed via docker
@@ -59,6 +60,7 @@
 - Gpu assignment per instance
 - Proxy server in front of vLLM to handle loading/unloading of models
 - Stuff other than vLLM
+- Have multiple storage locations
 
 ## Initial assumption
 - Nvidia gpus

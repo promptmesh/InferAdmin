@@ -8,7 +8,3 @@ router = APIRouter(
 
 router.include_router(llms_router)
 router.include_router(applications_router)
-
-@router.get('/')
-async def get_deployments():
-    pass

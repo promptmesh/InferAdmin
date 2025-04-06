@@ -1,17 +1,9 @@
 from fastapi import APIRouter
-
+from .models import GetGpusResponse
 router = APIRouter(
     prefix='/gpus'
 )
 
 @router.get('/')
-async def get_gpus():
-    pass
-
-@router.put('/')
-async def put_gpus():
-    pass
-
-@router.delete('/')
-async def delete_gpus():
+async def get_gpus() -> GetGpusResponse:
     pass

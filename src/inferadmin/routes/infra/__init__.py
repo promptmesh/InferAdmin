@@ -8,7 +8,3 @@ router = APIRouter(
 
 router.include_router(gpus_router)
 router.include_router(volumes_router)
-
-@router.get('/')
-async def get_volumes():
-    pass
