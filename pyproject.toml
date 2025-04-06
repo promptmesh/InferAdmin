@@ -1,0 +1,21 @@
+[project]
+name = "inferadmin"
+version = "0.0.01"
+description = "A lightweight management interface for local LLM infrastructure."
+readme = "README.md"
+authors = [
+    { name = "TerminalMan", email = "84923604+SecretiveShell@users.noreply.github.com" },
+    { name = "Ben Gitter", email = "gitterbd@gmail.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi>=0.115.12",
+    "uvicorn>=0.34.0",
+]
+
+[project.scripts]
+inferadmin = "inferadmin:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
