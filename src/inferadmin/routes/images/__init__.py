@@ -1,19 +1,46 @@
+from aiodocker import DockerError
 from fastapi import APIRouter
-from .models import GetImagesResponse, PutImageRequest, DeleteImageRequest
+
+from inferadmin.docker import DockerManager
 from inferadmin.routes.standard_models import BasicResponse
 
-router = APIRouter(
-    prefix='/images'
-)
+from .models import DeleteImageRequest, GetImagesResponse, PutImageRequest
 
-@router.get('/')
+router = APIRouter(prefix="/images")
+
+
+@router.get("/")
 async def get_images() -> GetImagesResponse:
     pass
 
-@router.put('/')
-async def put_images(data: PutImageRequest) -> BasicResponse:
-    pass
 
-@router.delete('/')
+@router.put("/")
+async def put_images(data: PutImageRequest) -> BasicResponse:
+    """Pull a docker image"""
+    docker = DockerManager.get()
+
+    try:
+        await docker.images.pull(data.repo)
+    except Exception as e:
+        return BasicResponse(success=False, error_message=str(e))
+
+    return BasicResponse(success=True, error_message=None)
+
+
+@router.delete("/")
 async def delete_images(data: DeleteImageRequest) -> BasicResponse:
-    pass
+    """Delete a docker image"""
+    docker = DockerManager.get()
+
+    try:
+        await docker.images.get(data.id)
+    except DockerError as e:
+        if e.status == 404:
+            return BasicResponse(success=True, error_message=None)
+
+    try:
+        await docker.images.delete(data.id)
+    except Exception as e:
+        return BasicResponse(success=False, error_message=str(e))
+
+    return BasicResponse(success=True, error_message=None)
