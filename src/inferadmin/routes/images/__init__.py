@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from inferadmin.docker import DockerManager
 from inferadmin.routes.standard_models import BasicResponse
 
-from .models import DeleteImageRequest, GetImagesResponse, PutImageRequest
+from .models import DeleteImageRequest, GetImagesResponse, PostImageRequest
 
 router = APIRouter(prefix="/images")
 
@@ -14,8 +14,8 @@ async def get_images() -> GetImagesResponse:
     pass
 
 
-@router.put("/")
-async def put_images(data: PutImageRequest) -> BasicResponse:
+@router.post("/")
+async def post_images(data: PostImageRequest) -> BasicResponse:
     """Pull a docker image"""
     docker = DockerManager.get()
 

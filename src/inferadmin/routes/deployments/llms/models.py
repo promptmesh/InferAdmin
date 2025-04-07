@@ -13,7 +13,7 @@ class LLM(BaseModel):
 class GetLlmResponse(BaseModel):
     llms: list[LLM]
 
-class PutLlmRequest(BaseModel):
+class PostLlmRequest(BaseModel):
     model_name: str
     engine: engines
     args: dict[str, Any]

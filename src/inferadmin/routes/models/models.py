@@ -11,7 +11,7 @@ class Model(BaseModel):
 class GetModelsResponse(BaseModel):
     models: list[Model]
 
-class PutModelRequest(BaseModel):
+class PostModelRequest(BaseModel):
     repo_id: str
     source: Literal["Huggingface"]
 

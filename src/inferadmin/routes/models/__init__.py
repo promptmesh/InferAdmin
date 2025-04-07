@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .models import GetModelsResponse, PutModelRequest, DeleteModelRequest
+from .models import GetModelsResponse, PostModelRequest, DeleteModelRequest
 
 from .support import scan_hf_models_directory, delete_model, download_hf_model
 
@@ -12,8 +12,8 @@ async def get_models() -> GetModelsResponse:
     models = scan_hf_models_directory()
     return {'models': models}
 
-@router.put('/')
-async def put_models(data: PutModelRequest):
+@router.post('/')
+async def post_models(data: PostModelRequest):
     repo_id = data.repo_id
     source = data.source
     if source == "Huggingface":

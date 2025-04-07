@@ -12,7 +12,7 @@ class DockerImage(BaseModel):
 class GetImagesResponse(BaseModel):
     images: list[DockerImage]
 
-class PutImageRequest(BaseModel):
+class PostImageRequest(BaseModel):
     repo: str
 
 class DeleteImageRequest(BaseModel):

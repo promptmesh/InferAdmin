@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .models import GetLlmResponse, PutLlmRequest, DeleteLlmRequest
+from .models import GetLlmResponse, PostLlmRequest, DeleteLlmRequest
 from inferadmin.routes.standard_models import BasicResponse
 
 router = APIRouter(
@@ -10,8 +10,8 @@ router = APIRouter(
 async def get_llms() -> GetLlmResponse:
     pass
 
-@router.put('/')
-async def put_llms(data: PutLlmRequest) -> BasicResponse:
+@router.post('/')
+async def post_llms(data: PostLlmRequest) -> BasicResponse:
     pass
 
 @router.delete('/')

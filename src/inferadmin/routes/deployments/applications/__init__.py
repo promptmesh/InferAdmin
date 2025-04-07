@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .models import GetApplicationsResponse, PutApplicationRequest, DeleteApplicationRequest
+from .models import GetApplicationsResponse, PostApplicationRequest, DeleteApplicationRequest
 from inferadmin.routes.standard_models import BasicResponse
 
 router = APIRouter(
@@ -10,8 +10,8 @@ router = APIRouter(
 async def get_applications() -> GetApplicationsResponse:
     pass
 
-@router.put('/')
-async def put_applications(data: PutApplicationRequest) -> BasicResponse:
+@router.post('/')
+async def post_applications(data: PostApplicationRequest) -> BasicResponse:
     pass
 
 @router.delete('/')

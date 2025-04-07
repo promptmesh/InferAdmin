@@ -12,7 +12,7 @@ class Applications(BaseModel):
 class GetApplicationsResponse(BaseModel):
     applications: list[Applications]
 
-class PutApplicationRequest(BaseModel):
+class PostApplicationRequest(BaseModel):
     name: str
     type: application_types
     args: dict
