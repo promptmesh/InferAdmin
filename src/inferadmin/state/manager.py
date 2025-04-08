@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Any, List, Optional, TypeVar, Generic, Type
 from datetime import datetime
 from pydantic import BaseModel
+from contextlib import asynccontextmanager
 
 T = TypeVar('T', bound=BaseModel)
 
@@ -92,3 +93,12 @@ class StateManager(Generic[T]):
         if isinstance(obj, datetime):
             return obj.isoformat()
         raise TypeError(f"Type {type(obj)} not serializable")
+    
+    @asynccontextmanager
+    async def lifespan(self):
+        """Context manager to handle state loading and saving."""
+        self.state = self.get_all()
+        try:
+            yield self
+        finally:
+            self._save_items(self.state)
