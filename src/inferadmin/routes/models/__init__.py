@@ -10,7 +10,10 @@ router = APIRouter(
 @router.get('/')
 async def get_models() -> GetModelsResponse:
     models = scan_hf_models_directory()
-    return {'models': models}
+    response = GetModelsResponse(
+        models=models
+    )
+    return response
 
 @router.post('/')
 async def post_models(data: PostModelRequest):

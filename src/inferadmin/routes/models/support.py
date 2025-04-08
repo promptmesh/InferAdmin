@@ -8,6 +8,8 @@ import time
 import shutil
 from fastapi import HTTPException
 
+from .models import Model
+
 from inferadmin.config.loader import config_manager
 
 def check_hf_model_exists(model_path):
@@ -117,15 +119,15 @@ def scan_hf_models_directory():
     Returns:
         list: List of dictionaries with model info (repo_id, path, size_gb, last_updated)
     """
-    base_path = Path(config_manager.get_config().model_storage_path)
+    volume_path = Path(config_manager.get_config().model_storage_path)
     
-    if not base_path.exists() or not base_path.is_dir():
+    if not volume_path.exists() or not volume_path.is_dir():
         return []
     
     model_info_list = []
     
     # Get all subdirectories in the base path
-    subdirs = [d for d in base_path.iterdir() if d.is_dir()]
+    subdirs = [d for d in volume_path.iterdir() if d.is_dir()]
     
     for folder in subdirs:
         # Get folder name
@@ -141,18 +143,17 @@ def scan_hf_models_directory():
         # Get the most recent modification date of any file in the directory
         last_updated = get_most_recent_modified_date(folder_path)
         
-        # Create model info dictionary
-
-        model_info = {
-            "repo_id": folder_name.replace('_', '/'),
-            "path": folder_path,
-            "size_gb": size_gb,
-            "last_updated": last_updated
-        }
+        # create Model object
+        model_info = Model(
+            repo_id=folder_name.replace('_', '/'),
+            path=folder_path,
+            size_gb=size_gb,
+            last_updated=last_updated
+        )
 
         if is_valid_model:
             model_info_list.append(model_info)
-    
+
     return model_info_list
 
 def delete_model(repo_id:str):
@@ -200,9 +201,9 @@ def download_hf_model(repo_id:str):
         token=config_manager.get_config().hf_token
     )
 
-    base_path = config_manager.get_config().model_storage_path
+    volume_path = config_manager.get_config().model_storage_path
     file_name = repo_id.replace('/', '_')
-    target_path = f"{base_path}/{file_name}"
+    target_path = f"{volume_path}/{file_name}"
 
     try:
         hf.snapshot_download(
@@ -211,7 +212,7 @@ def download_hf_model(repo_id:str):
             local_dir=target_path
         )
 
-    except RepositoryNotFoundError as e:
+    except RepositoryNotFoundError as _:
         raise HTTPException(
             status_code=404,
             detail=f"HuggingFace Repository not found: {repo_id}"
