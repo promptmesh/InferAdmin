@@ -1,22 +1,20 @@
-from aiodocker import Docker
+import docker
 
 class DockerManagerClass:
-    docker: Docker | None = None
+    client = None
 
-    async def init(self):
+    def init(self):
+        """Initialize the Docker client"""
         try:
-            self.docker = Docker()
+            self.client = docker.from_env()
         except Exception as e:
             raise Exception(f"Failed to initialize Docker: {e}")
         
-    def get(self) -> Docker:
-        if self.docker is None:
-            raise Exception("Docker not initialized")
-        return self.docker
-    
-    async def close(self):
-        if self.docker is not None:
-            await self.docker.close()
+    def get(self):
+        """Get the Docker client instance"""
+        if self.client is None:
+            self.init()  # Auto-initialize if not done
+        return self.client
 
 
 DockerManager = DockerManagerClass()
