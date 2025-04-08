@@ -6,8 +6,6 @@ from inferadmin.docker import DockerManager
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await config_manager.load()
-    await DockerManager.init()
+    DockerManager.init()
     
     yield # run fastapi app
-    
-    await DockerManager.close()

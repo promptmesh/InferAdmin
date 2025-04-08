@@ -57,10 +57,11 @@
 - YML for config and data, pydantic for representation
 
 ## Ideas
-- Gpu assignment per instance
+- Gpu assignment per instance VIA nvidia-smi UUID for GPUs
 - Proxy server in front of vLLM to handle loading/unloading of models
 - Stuff other than vLLM
 - Have multiple storage locations
+- Add analytics for vLLM instances collected from vLLM's prometheus instance
 
 ## Initial assumption
 - Nvidia gpus
