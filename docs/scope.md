@@ -12,6 +12,7 @@
     - Deploy instance
     - Stop instance
     - Status of instance (Docker health check)
+    - Attach GPUs to instance
 
 - vLLM container version control
     - Dropdown for selecting vLLM container version
@@ -28,7 +29,7 @@
 - GPU state
     - Vram load
     - Utilization
-    - Power consumption?
+    - Power consumption
 
 - Use health checks for containers
 - Unified local model location
@@ -53,13 +54,13 @@
 - Deploy InferAdmin in docker
 - InferAdmin interacts with host docker to deploy docker containers for inference/interface
 - FastApi for backend
-- Frontend html/css/js (maybe do VueJS)
+- Frontend Vue JS + Shadcn
 - YML for config and data, pydantic for representation
 
 ## Ideas
-- Gpu assignment per instance VIA nvidia-smi UUID for GPUs
-- Proxy server in front of vLLM to handle loading/unloading of models
-- Stuff other than vLLM
+- Proxying inference requests in front of vLLM to route to correct model
+    - Placeholding /llms endpoing for this functionality
+- Engines other than vLLM
 - Have multiple storage locations
 - Add analytics for vLLM instances collected from vLLM's prometheus instance
 
