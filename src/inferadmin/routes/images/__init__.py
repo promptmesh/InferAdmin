@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from .models import DeleteImageRequest, GetImagesResponse, PostImageRequest, DockerImage
+from .models import GetImagesResponse, PostImageRequest, DockerImage
 from .support import pull_container_image, get_container_images, remove_container_image
 
 from datetime import datetime
@@ -11,7 +11,7 @@ router = APIRouter(prefix="/images")
 INFERADMIN_LABEL = "managed-by-inferadmin"
 
 
-@router.get("/")
+@router.get("/list")
 async def get_images() -> GetImagesResponse:
     """Get all docker images managed by InferAdmin"""
     try:
@@ -60,7 +60,7 @@ async def get_images() -> GetImagesResponse:
     return GetImagesResponse(images=images_list)
 
 
-@router.post("/")
+@router.post("/pull")
 async def post_images(data: PostImageRequest):
     """Pull a docker image and mark it as managed by InferAdmin"""
     try:
@@ -77,12 +77,12 @@ async def post_images(data: PostImageRequest):
         raise HTTPException(status_code=500, detail=f"Failed to pull image: {str(e)}")
 
 
-@router.delete("/")
-async def delete_images(data: DeleteImageRequest):
+@router.delete("/{id}/delete")
+async def delete_images(id: str):
     """Delete a docker image"""
     try:
         # Use the support function to remove the image
-        remove_container_image(data.id)
-        return {"status": "success", "message": f"Image {data.id} deleted successfully"}
+        remove_container_image(id)
+        return {"status": "success", "message": f"Image {id} deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")

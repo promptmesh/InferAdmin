@@ -17,7 +17,3 @@ class GetModelsResponse(BaseModel):
 class PostModelRequest(BaseModel):
     repo_id: str
     source: Literal["Huggingface"]
-
-
-class DeleteModelRequest(BaseModel):
-    repo_id: str

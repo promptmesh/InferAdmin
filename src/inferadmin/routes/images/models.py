@@ -17,7 +17,3 @@ class GetImagesResponse(BaseModel):
 
 class PostImageRequest(BaseModel):
     repo: str
-
-
-class DeleteImageRequest(BaseModel):
-    id: str
