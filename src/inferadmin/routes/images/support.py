@@ -26,6 +26,43 @@ def pull_container_image(image_name: str):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to pull Docker image: {str(e)}"
         )
+    
+def get_image_name_by_id(image_id: str):
+    """
+    Get the image name by its ID.
+    
+    Args:
+        image_id: The ID of the image to retrieve.
+    
+    Returns:
+        The name of the image.
+    """
+    try:
+        image = DockerManager.client.images.get(image_id)
+        # check if the image is managed by InferAdmin
+        if not any("-inferadmin" in tag for tag in image.tags):
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Image with ID {image_id} is not managed by InferAdmin."
+            )
+        return image.tags[0] if image.tags else None
+    except docker.errors.ImageNotFound:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Image with ID {image_id} not found."
+        )
+    except docker.errors.APIError as e:
+        print(f"Error fetching image: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error fetching Docker image: {str(e)}"
+        )
+    except Exception as e:
+        print(f"Unexpected error: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Unexpected error while fetching image: {str(e)}"
+        )
 
 def get_container_images():
     """
