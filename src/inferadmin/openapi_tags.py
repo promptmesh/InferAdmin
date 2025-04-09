@@ -4,7 +4,9 @@ from enum import Enum
 class Tag(str, Enum):
     """Tag for OpenAPI"""
 
-    deployments = "Deployed Services API"
+    applications = "Applications API"
+    llms = "LLMs API" 
+    deployments = "Deployed Services API"  # Kept for backward compatibility
     images = "Docker Images API"
     infra = "GPU and Volume info API"
     models = "ML Model API"
@@ -12,9 +14,14 @@ class Tag(str, Enum):
 
 tags_metadata = [
     {
-        "name": Tag.deployments,
-        "description": "API endpoints to manage service deployments such as vLLM and OpenWebUI instances. "
-        "Allows deploying, stopping, configuring, and checking the status of running instances. ",
+        "name": Tag.applications,
+        "description": "API endpoints to manage application deployments such as OpenWebUI instances. "
+        "Allows deploying, stopping, configuring, and checking the status of running application containers.",
+    },
+    {
+        "name": Tag.llms,
+        "description": "API endpoints to manage LLM instances and perform inference. "
+        "Supports listing available models, generating completions, and managing LLM deployments.",
     },
     {
         "name": Tag.images,
