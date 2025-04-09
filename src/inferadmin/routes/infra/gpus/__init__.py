@@ -21,7 +21,7 @@ async def get_gpus() -> GetGpusResponse:
         output = subprocess.check_output(
             [
                 nvidia_smi,
-                "--query-gpu=index,utilization.gpu,power.draw,memory.total,memory.used",
+                "--query-gpu=uuid,utilization.gpu,power.draw,memory.total,memory.used",
                 "--format=csv,noheader,nounits",
             ],
             encoding="utf-8",
@@ -34,10 +34,10 @@ async def get_gpus() -> GetGpusResponse:
             continue
 
         try:
-            index, utilization, power, total, used = line.split(",")
+            uuid, utilization, power, total, used = line.split(",")
             gpus.append(
                 GpuState(
-                    id=index,
+                    uuid=uuid,
                     total_vram=float(total),
                     used_vram=float(used),
                     utilization=float(utilization),

@@ -2,7 +2,7 @@ from pydantic import BaseModel
 
 
 class GpuState(BaseModel):
-    id: str
+    uuid: str
     total_vram: float
     used_vram: float
     utilization: float
