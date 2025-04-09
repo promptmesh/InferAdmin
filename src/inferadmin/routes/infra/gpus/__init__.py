@@ -19,12 +19,16 @@ async def get_gpus() -> GetGpusResponse:
 
     try:
         output = subprocess.check_output(
-            [nvidia_smi, "--query-gpu=index,utilization.gpu,power.draw,memory.total,memory.used", "--format=csv,noheader,nounits"],
+            [
+                nvidia_smi,
+                "--query-gpu=index,utilization.gpu,power.draw,memory.total,memory.used",
+                "--format=csv,noheader,nounits",
+            ],
             encoding="utf-8",
         )
     except subprocess.CalledProcessError as e:
         raise HTTPException(status_code=500, detail=f"nvidia-smi failed: {e.output}")
-    
+
     for line in output.splitlines():
         if not line or line.startswith("#"):
             continue

@@ -6,9 +6,7 @@ from inferadmin.routes.models import router as models_router
 
 from inferadmin.openapi_tags import Tag
 
-router = APIRouter(
-    prefix='/api/v1'
-)
+router = APIRouter(prefix="/api/v1")
 
 router.include_router(deployment_router, tags=[Tag.deployments])
 router.include_router(images_router, tags=[Tag.images])

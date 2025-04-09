@@ -3,26 +3,25 @@ from .models import GetModelsResponse, PostModelRequest, DeleteModelRequest
 
 from .support import scan_hf_models_directory, delete_model, download_hf_model
 
-router = APIRouter(
-    prefix='/models'
-)
+router = APIRouter(prefix="/models")
 
-@router.get('/')
+
+@router.get("/")
 async def get_models() -> GetModelsResponse:
     models = scan_hf_models_directory()
-    response = GetModelsResponse(
-        models=models
-    )
+    response = GetModelsResponse(models=models)
     return response
 
-@router.post('/')
+
+@router.post("/")
 async def post_models(data: PostModelRequest):
     repo_id = data.repo_id
     source = data.source
     if source == "Huggingface":
         download_hf_model(repo_id)
 
-@router.delete('/')
+
+@router.delete("/")
 async def delete_models(data: DeleteModelRequest):
     repo_id = data.repo_id
     delete_model(repo_id)

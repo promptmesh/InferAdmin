@@ -17,40 +17,42 @@ async def get_images() -> GetImagesResponse:
     try:
         # Get InferAdmin managed images using the support function
         managed_images = get_container_images()
-        
+
         images_list = []
-        
+
         for image in managed_images:
             # Use the first tag that contains "-inferadmin" for this image
-            inferadmin_tag = next((tag for tag in image.tags if "-inferadmin" in tag), None)
-            
+            inferadmin_tag = next(
+                (tag for tag in image.tags if "-inferadmin" in tag), None
+            )
+
             if not inferadmin_tag:
                 continue  # Skip if no valid tag
-                
+
             # Extract base info from the tag
-            image_id = image.id.replace('sha256:', '')[:12]
+            image_id = image.id.replace("sha256:", "")[:12]
             # Original image name is before the "-inferadmin" part
             original_tag = inferadmin_tag.split("-inferadmin")[0]
-            
-            repo_parts = original_tag.split(':')
+
+            repo_parts = original_tag.split(":")
             repo = repo_parts[0]
-            tag_value = repo_parts[1] if len(repo_parts) > 1 else 'latest'
+            tag_value = repo_parts[1] if len(repo_parts) > 1 else "latest"
             path = repo
-            created = image.attrs.get('Created', datetime.now())
+            created = image.attrs.get("Created", datetime.now())
             # Convert size to GB (size is in bytes)
-            size = image.attrs.get('Size', 0) / (1024 * 1024 * 1024)
-            
+            size = image.attrs.get("Size", 0) / (1024 * 1024 * 1024)
+
             docker_image = DockerImage(
                 repo=repo,
                 id=image_id,
                 path=path,
                 tag=tag_value,
                 created=created,
-                size=round(size, 2)
+                size=round(size, 2),
             )
-            
+
             images_list.append(docker_image)
-    
+
     except Exception as e:
         print(f"Error fetching images: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error fetching images: {str(e)}")
@@ -64,13 +66,13 @@ async def post_images(data: PostImageRequest):
     try:
         # Use the support function to pull and tag the image
         image = pull_container_image(data.repo)
-        
+
         # Create response using format expected by API
         return {
-            "status": "success", 
-            "message": f"Image {data.repo} pulled and tagged as {image.tags[0]}"
+            "status": "success",
+            "message": f"Image {data.repo} pulled and tagged as {image.tags[0]}",
         }
-        
+
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to pull image: {str(e)}")
 
@@ -81,9 +83,6 @@ async def delete_images(data: DeleteImageRequest):
     try:
         # Use the support function to remove the image
         remove_container_image(data.id)
-        return {
-            "status": "success", 
-            "message": f"Image {data.id} deleted successfully"
-        }
+        return {"status": "success", "message": f"Image {data.id} deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")

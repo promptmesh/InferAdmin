@@ -1,5 +1,6 @@
 import docker
 
+
 class DockerManagerClass:
     client = None
 
@@ -9,7 +10,7 @@ class DockerManagerClass:
             self.client = docker.from_env()
         except Exception as e:
             raise Exception(f"Failed to initialize Docker: {e}")
-        
+
     def get(self):
         """Get the Docker client instance"""
         if self.client is None:
