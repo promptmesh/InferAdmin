@@ -1,5 +1,5 @@
 import docker
-import uuid
+import secrets
 from fastapi import HTTPException
 from typing import Dict, List, Any
 
@@ -9,7 +9,7 @@ from inferadmin.routes.images.support import get_image_name_by_id
 
 def generate_deployment_id() -> str:
     """Generate a unique ID for a deployment."""
-    return str(uuid.uuid4())[:8]
+    return secrets.token_hex(4)
 
 
 def check_container_exists(container_id: str) -> bool:
