@@ -2,7 +2,6 @@ import docker
 from typing import Dict
 from fastapi import HTTPException
 from datetime import datetime
-from uuid import uuid4
 
 from inferadmin.docker import DockerManager
 from inferadmin.state.manager import StateManager
@@ -26,6 +25,7 @@ def deploy_application(name: str, app_type: str, image_id: str, host_port: int,
         device_requests = None
         
         # Configure based on application type
+        # TODO Relocate this to a centralized location
         if app_type == "OpenWebUI":
             # Map container port to host port
             ports = {'3000/tcp': ('0.0.0.0', host_port)}

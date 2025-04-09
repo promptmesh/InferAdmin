@@ -1,13 +1,8 @@
 import docker
-import os
 import uuid
-import time
-from datetime import datetime
-from typing import Dict, Any, Optional
 from fastapi import HTTPException
 
 from inferadmin.docker import DockerManager
-from inferadmin.config.loader import config_manager
 
 def generate_deployment_id() -> str:
     """Generate a unique ID for a deployment."""

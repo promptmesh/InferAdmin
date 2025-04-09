@@ -68,7 +68,7 @@ async def post_images(data: PostImageRequest):
         # Create response using format expected by API
         return {
             "status": "success", 
-            "message": f"Image {data.repo} pulled and tagged as {data.repo}-inferadmin"
+            "message": f"Image {data.repo} pulled and tagged as {image.tags[0]}"
         }
         
     except Exception as e:
