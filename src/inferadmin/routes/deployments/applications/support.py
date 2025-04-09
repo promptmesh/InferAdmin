@@ -168,7 +168,7 @@ def get_container_logs(id: str) -> str:
         if application:
             application.logs = logs
             app_manager.update(application)
-        return
+        return logs
     except docker.errors.NotFound:
         raise HTTPException(status_code=404, detail=f"Container not found: {id}")
     except Exception as e:
