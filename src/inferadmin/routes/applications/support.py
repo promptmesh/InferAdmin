@@ -27,31 +27,30 @@ def deploy_application(
     gpu_uuids: list[str] = None,
 ) -> Application:
     """Deploy an application container with explicit configuration."""
+    ports = {}
+    volumes = {}
+    env = environment or {}
+    labels = {
+        "deployment-type": "application",
+    }
+
+    # Configure based on application type
+    if app_type == "OpenWebUI":
+        # Map container port to host port
+        ports = {"3000/tcp": ("0.0.0.0", host_port)}
+        # Set required environment variables
+        env.update({"WEBUI_ALLOW_DOWNLOADS": "true"})
+        # Add default volume mapping per quick start
+        volumes = {"open-webui": {"bind": "/app/backend/data", "mode": "rw"}}
+    elif app_type == "vLLM":
+        raise HTTPException(
+            status_code=400, detail="vLLM application type is not supported yet."
+        )
+    else:
+        raise HTTPException(
+            status_code=400, detail=f"Unsupported application type: {app_type}"
+        )
     try:
-        ports = {}
-        volumes = {}
-        env = environment or {}
-        labels = {
-            "deployment-type": "application",
-        }
-
-        # Configure based on application type
-        if app_type == "OpenWebUI":
-            # Map container port to host port
-            ports = {"3000/tcp": ("0.0.0.0", host_port)}
-            # Set required environment variables
-            env.update({"WEBUI_ALLOW_DOWNLOADS": "true"})
-            # Add default volume mapping per quick start
-            volumes = {"open-webui": {"bind": "/app/backend/data", "mode": "rw"}}
-        elif app_type == "vLLM":
-            raise HTTPException(
-                status_code=400, detail="vLLM application type is not supported yet."
-            )
-        else:
-            raise HTTPException(
-                status_code=400, detail=f"Unsupported application type: {app_type}"
-            )
-
         # Launch container using common utility
         container = run_container(
             image_id=image_id,
