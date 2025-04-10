@@ -73,7 +73,7 @@
 
 ## Ideas
 - Proxying inference requests in front of vLLM to route to correct model
-    - Placeholding /llms endpoing for this functionality
+    - Placeholding /llms endpoint for this functionality
 - Engines other than vLLM
 - Have multiple storage locations
 - Add analytics for vLLM instances collected from vLLM's prometheus instance
