@@ -1,4 +1,5 @@
 from fastapi import APIRouter, HTTPException
+from loguru import logger
 
 from .models import GetImagesResponse, PostImageRequest, DockerImage, DeleteImageRequest
 from .support import pull_container_image, get_container_images, remove_container_image
@@ -54,7 +55,7 @@ async def get_images() -> GetImagesResponse:
             images_list.append(docker_image)
 
     except Exception as e:
-        print(f"Error fetching images: {str(e)}")
+        logger.error(f"fetching images: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Error fetching images: {str(e)}")
 
     return GetImagesResponse(images=images_list)

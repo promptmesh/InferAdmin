@@ -5,6 +5,7 @@ from typing import Any, List, Optional, TypeVar, Generic, Type
 from datetime import datetime
 from pydantic import BaseModel
 from contextlib import asynccontextmanager
+from loguru import logger
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -42,7 +43,7 @@ class StateManager(Generic[T]):
             # Convert each dict to a model instance
             return [self.model_cls.model_validate(item) for item in data]
         except Exception as e:
-            print(f"Error reading state file: {e}")
+            logger.error(f"reading state file: {e}")
             return []
 
     def get_by_id(self, id: str) -> Optional[T]:
@@ -63,7 +64,7 @@ class StateManager(Generic[T]):
                     default=self._json_serializer,
                 )
         except Exception as e:
-            print(f"Error saving state file: {e}")
+            logger.error(f"saving state file: {e}")
             raise
 
     def add(self, item: T) -> T:

@@ -1,5 +1,6 @@
 import docker
 from fastapi import HTTPException, status
+from loguru import logger
 
 from inferadmin.docker import DockerManager
 from inferadmin.common.async_utils import to_async_io
@@ -14,17 +15,17 @@ def pull_container_image(image_name: str):
     """
     try:
         # Pull the image
-        print(f"Pulling image: {image_name}")
+        logger.info(f"Pulling image: {image_name}")
         image = DockerManager.client.images.pull(image_name)
 
         # Tag the image to identify it as managed by InferAdmin
         tag_name = f"{image_name}-inferadmin"
         image.tag(tag_name)
 
-        print(f"Image {image_name} pulled and tagged successfully.")
+        logger.info(f"Image {image_name} pulled and tagged successfully.")
         return image
     except docker.errors.APIError as e:
-        print(f"Error pulling image: {e}")
+        logger.error(f"pulling image: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Failed to pull Docker image: {str(e)}",
@@ -56,13 +57,13 @@ def get_image_name_by_id(image_id: str):
             detail=f"Image with ID {image_id} not found.",
         )
     except docker.errors.APIError as e:
-        print(f"Error fetching image: {e}")
+        logger.error(f"fetching image: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching Docker image: {str(e)}",
         )
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Unexpected error while fetching image: {str(e)}",
@@ -80,13 +81,13 @@ def get_container_images():
         ]
         return inferadmin_images
     except docker.errors.APIError as e:
-        print(f"Error fetching images: {e}")
+        logger.error(f"fetching images: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Error fetching Docker images: {str(e)}",
         )
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Unexpected error while fetching images: {str(e)}",
@@ -108,7 +109,7 @@ def remove_container_image(image_id: str):
             # Check if any tag for this image contains -inferadmin
             if any("-inferadmin" in tag for tag in image.tags):
                 DockerManager.client.images.remove(image.id, force=True)
-                print(f"Image with ID {image_id} removed successfully.")
+                logger.info(f"Image with ID {image_id} removed successfully.")
                 return
         except docker.errors.ImageNotFound:
             # Not a direct ID, try to find by name/tag
@@ -128,7 +129,7 @@ def remove_container_image(image_id: str):
             original_tag = inferadmin_tag.split("-inferadmin")[0]
             if image_id == original_tag or image_id in image.tags:
                 DockerManager.client.images.remove(image.id, force=True)
-                print(f"Image {image_id} removed successfully.")
+                logger.info(f"Image {image_id} removed successfully.")
                 return
 
         raise HTTPException(
@@ -136,7 +137,7 @@ def remove_container_image(image_id: str):
             detail=f"Image {image_id} not found or not managed by InferAdmin.",
         )
     except docker.errors.APIError as e:
-        print(f"Error removing image: {e}")
+        logger.error(f"removing image: {e}")
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"Error removing Docker image: {str(e)}",
@@ -144,7 +145,7 @@ def remove_container_image(image_id: str):
     except HTTPException:
         raise
     except Exception as e:
-        print(f"Unexpected error: {e}")
+        logger.error(f"Unexpected error: {e}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Unexpected error while removing image: {str(e)}",

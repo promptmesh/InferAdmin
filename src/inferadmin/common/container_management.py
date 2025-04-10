@@ -2,6 +2,7 @@ import docker
 import secrets
 from fastapi import HTTPException
 from typing import Dict, List, Any
+from loguru import logger
 
 from inferadmin.docker import DockerManager
 from inferadmin.routes.images.support import get_image_name_by_id
@@ -21,7 +22,7 @@ def check_container_exists(container_id: str) -> bool:
     except docker.errors.NotFound:
         return False
     except Exception as e:
-        print(f"Error checking container: {e}")
+        logger.error(f"checking container: {e}")
         return False
 
 
@@ -33,7 +34,7 @@ def get_container_status(container_id: str) -> str:
     except docker.errors.NotFound:
         return "not_found"
     except Exception as e:
-        print(f"Error getting container status: {e}")
+        logger.error(f"getting container status: {e}")
         return "error"
 
 
@@ -48,7 +49,7 @@ def stop_container(container_id: str) -> bool:
     except docker.errors.NotFound:
         raise HTTPException(status_code=404, detail=f"Container not found: {container_id}")
     except Exception as e:
-        print(f"Error stopping container: {e}")
+        logger.error(f"stopping container: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to stop container: {str(e)}"
         )
@@ -65,7 +66,7 @@ def start_container(container_id: str) -> bool:
     except docker.errors.NotFound:
         raise HTTPException(status_code=404, detail=f"Container not found: {container_id}")
     except Exception as e:
-        print(f"Error starting container: {e}")
+        logger.error(f"starting container: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to start container: {str(e)}"
         )
@@ -81,7 +82,7 @@ def remove_container(container_id: str) -> bool:
     except docker.errors.NotFound:
         return False
     except Exception as e:
-        print(f"Error removing container: {e}")
+        logger.error(f"removing container: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to remove container: {str(e)}"
         )
@@ -99,7 +100,7 @@ def get_container_logs(container_id: str, tail: int = 100) -> str:
             status_code=404, detail=f"Container {container_id} not found"
         )
     except Exception as e:
-        print(f"Error getting container logs: {e}")
+        logger.error(f"getting container logs: {e}")
         raise HTTPException(
             status_code=500, detail=f"Failed to get container logs: {str(e)}"
         )

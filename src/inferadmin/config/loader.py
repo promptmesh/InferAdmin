@@ -1,10 +1,11 @@
 from .models import InferAdminConfig
+from loguru import logger
 
 
 class Config:
     async def load(self):
         self.config = InferAdminConfig()
-        print(self.get_config())
+        logger.info(self.get_config())
 
     def get_config(self) -> InferAdminConfig:
         return self.config

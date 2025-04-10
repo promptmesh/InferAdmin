@@ -1,6 +1,7 @@
 from typing import Dict
 from fastapi import HTTPException
 from datetime import datetime
+from loguru import logger
 
 from inferadmin.docker import DockerManager
 from inferadmin.common.container_management import (
@@ -115,7 +116,7 @@ def get_all_applications() -> list[Application]:
                     # Use status from map or "not_found" if container no longer exists
                     app.state = container_status.get(app.id, "not_found")
         except Exception as e:
-            print(f"Error fetching container statuses: {e}")
+            logger.error(f"fetching container statuses: {e}")
             # Fall back to individual status checks if batch operation fails
             for app in applications:
                 if hasattr(app, "id") and app.id:
