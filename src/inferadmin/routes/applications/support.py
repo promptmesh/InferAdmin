@@ -18,7 +18,7 @@ from .models import Application
 app_manager = StateManager(STATE_DIR, "applications.json", Application)
 
 
-def deploy_application(
+async def deploy_application(
     name: str,
     app_type: str,
     image_id: str,
@@ -52,7 +52,7 @@ def deploy_application(
         )
     try:
         # Launch container using common utility
-        container = run_container(
+        container = await run_container(
             image_id=image_id,
             name=f"inferadmin-app-{name}",
             ports=ports,
@@ -91,15 +91,40 @@ def get_all_applications() -> list[Application]:
     """Get all applications with current status."""
     applications = app_manager.get_all()
 
-    # Update status for each application
-    for app in applications:
-        if hasattr(app, "id") and app.id:
-            app.state = get_container_status(app.id)
+    # Early return if no applications
+    if not applications:
+        return applications
+
+    # Collect all container IDs
+    container_ids = [app.id for app in applications if hasattr(app, "id") and app.id]
+    
+    # If we have container IDs, get their statuses efficiently
+    if container_ids:
+        try:
+            # Get all containers at once
+            containers = DockerManager.client.containers.list(all=True, filters={"id": container_ids})
+            
+            # Create a map of container ID to status
+            container_status = {
+                container.id: container.status for container in containers
+            }
+            
+            # Update application statuses
+            for app in applications:
+                if hasattr(app, "id") and app.id:
+                    # Use status from map or "not_found" if container no longer exists
+                    app.state = container_status.get(app.id, "not_found")
+        except Exception as e:
+            print(f"Error fetching container statuses: {e}")
+            # Fall back to individual status checks if batch operation fails
+            for app in applications:
+                if hasattr(app, "id") and app.id:
+                    app.state = get_container_status(app.id)
 
     return applications
 
 
-def delete_application(deployment_id: str) -> bool:
+async def delete_application(deployment_id: str) -> bool:
     """Delete an application cleanly."""
     # Get the deployment
     application = app_manager.get_by_id(deployment_id)
@@ -115,7 +140,7 @@ def delete_application(deployment_id: str) -> bool:
             
             # Stop if running
             if container.status == "running":
-                stop_container_base(application.id)
+                await stop_container_base(application.id)
                 
             # Remove container
             container.remove(force=True)  # does not kill volumes
@@ -132,9 +157,15 @@ def delete_application(deployment_id: str) -> bool:
     return True
 
 
-def get_container_logs(id: str) -> str:
-    """Retrieve logs of a container and update application state."""
-    logs = get_logs(id)
+async def get_container_logs(id: str, tail: int = 100) -> str:
+    """
+    Retrieve logs of a container and update application state.
+    
+    Args:
+        id: Container ID
+        tail: Number of log lines to return (default: 100)
+    """
+    logs = await get_logs(id, tail=tail)
     
     # Update logs in application state if it exists
     application = app_manager.get_by_id(id)
@@ -145,11 +176,11 @@ def get_container_logs(id: str) -> str:
     return logs
 
 
-def stop_container(id: str) -> bool:
+async def stop_container(id: str) -> bool:
     """Stop a running container."""
-    return stop_container_base(id)
+    return await stop_container_base(id)
 
 
-def start_container(id: str) -> bool:
+async def start_container(id: str) -> bool:
     """Start an existing container."""
-    return start_container_base(id)
+    return await start_container_base(id)

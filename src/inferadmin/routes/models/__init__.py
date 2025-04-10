@@ -18,9 +18,9 @@ async def post_models(data: PostModelRequest):
     repo_id = data.repo_id
     source = data.source
     if source == "Huggingface":
-        download_hf_model(repo_id)
+        await download_hf_model(repo_id)
 
 
 @router.delete("/{id}/delete")
 async def delete_models(id: str):
-    delete_model(id)
+    await delete_model(id)

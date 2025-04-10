@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 from .models import (
     GetApplicationsResponse,
     PostApplicationRequest,
@@ -26,7 +26,7 @@ async def get_applications() -> GetApplicationsResponse:
 @router.post("/create")
 async def post_applications(data: PostApplicationRequest):
     """Deploy a new application."""
-    application = deploy_application(
+    application = await deploy_application(
         name=data.name,
         app_type=data.app_type,
         image_id=data.image_id,
@@ -40,23 +40,23 @@ async def post_applications(data: PostApplicationRequest):
 @router.delete("/{id}")
 async def delete_applications(id: str) -> bool:
     """Delete an application by its ID."""
-    return delete_application(id)
+    return await delete_application(id)
 
 
 @router.get("/{id}/logs")
-async def get_application_logs_by_id(id: str) -> GetApplicationLogsResponse:
+async def get_application_logs_by_id(id: str, tail: int = Query(100, description="Number of log lines to return")) -> GetApplicationLogsResponse:
     """Get logs for a specific application by its container ID."""
-    logs = get_container_logs(id)  # TODO should add tail option later
+    logs = await get_container_logs(id, tail=tail)
     return GetApplicationLogsResponse(id=id, logs=logs)
 
 
 @router.get("/{id}/start")
 async def start_application(id: str) -> bool:
     """Start a stopped application by its container ID."""
-    return start_container(id)
+    return await start_container(id)
 
 
 @router.get("/{id}/stop")
 async def stop_application(id: str) -> bool:
     """Stop a running application by its container ID."""
-    return stop_container(id)
+    return await stop_container(id)

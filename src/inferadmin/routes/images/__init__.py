@@ -65,7 +65,7 @@ async def post_images(data: PostImageRequest):
     """Pull a docker image and mark it as managed by InferAdmin"""
     try:
         # Use the support function to pull and tag the image
-        image = pull_container_image(data.repo)
+        image = await pull_container_image(data.repo)
 
         # Create response using format expected by API
         return {
@@ -82,7 +82,7 @@ async def delete_images(id: str):
     """Delete a docker image"""
     try:
         # Use the support function to remove the image
-        remove_container_image(id)
+        await remove_container_image(id)
         return {"status": "success", "message": f"Image {id} deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")

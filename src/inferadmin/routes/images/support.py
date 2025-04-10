@@ -2,10 +2,12 @@ import docker
 from fastapi import HTTPException, status
 
 from inferadmin.docker import DockerManager
+from inferadmin.common.async_utils import to_async_io
 
 INFERADMIN_LABEL = "managed-by-inferadmin"
 
 
+@to_async_io  # Using IO-optimized thread pool for Docker API operations
 def pull_container_image(image_name: str):
     """
     Pull a Docker image from the Docker registry and mark it as managed by InferAdmin.
@@ -91,6 +93,7 @@ def get_container_images():
         )
 
 
+@to_async_io  # Using IO-optimized thread pool for Docker API operations
 def remove_container_image(image_id: str):
     """
     Remove a Docker image from the local system only if it is managed by InferAdmin.

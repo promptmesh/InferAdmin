@@ -8,7 +8,7 @@ import shutil
 from fastapi import HTTPException
 
 from .models import Model
-
+from inferadmin.common.async_utils import to_async_io
 from inferadmin.config.loader import config_manager
 
 
@@ -160,6 +160,7 @@ def scan_hf_models_directory():
     return model_info_list
 
 
+@to_async_io  # Using IO-optimized thread pool for file system operations
 def delete_model(repo_id: str):
     """
     Delete a model from the storage path and all its contents.
@@ -190,6 +191,7 @@ def delete_model(repo_id: str):
         raise HTTPException(status_code=500, detail=f"Error deleting model: {str(e)}")
 
 
+@to_async_io  # Using IO-optimized thread pool for network and file operations
 def download_hf_model(repo_id: str):
     """
     Downloads the given model to the local directory from huggingface.

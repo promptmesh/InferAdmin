@@ -5,6 +5,7 @@ from typing import Dict, List, Any
 
 from inferadmin.docker import DockerManager
 from inferadmin.routes.images.support import get_image_name_by_id
+from inferadmin.common.async_utils import to_async_io
 
 
 def generate_deployment_id() -> str:
@@ -36,6 +37,7 @@ def get_container_status(container_id: str) -> str:
         return "error"
 
 
+@to_async_io
 def stop_container(container_id: str) -> bool:
     """Stop a Docker container."""
     try:
@@ -52,6 +54,7 @@ def stop_container(container_id: str) -> bool:
         )
 
 
+@to_async_io
 def start_container(container_id: str) -> bool:
     """Start a Docker container."""
     try:
@@ -68,6 +71,7 @@ def start_container(container_id: str) -> bool:
         )
 
 
+@to_async_io
 def remove_container(container_id: str) -> bool:
     """Remove a Docker container."""
     try:
@@ -83,6 +87,7 @@ def remove_container(container_id: str) -> bool:
         )
 
 
+@to_async_io
 def get_container_logs(container_id: str, tail: int = 100) -> str:
     """Get logs from a Docker container."""
     try:
@@ -100,6 +105,7 @@ def get_container_logs(container_id: str, tail: int = 100) -> str:
         )
 
 
+@to_async_io
 def run_container(
     image_id: str,
     name: str,
