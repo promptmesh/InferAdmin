@@ -1,4 +1,5 @@
 import asyncio
+import os
 import functools
 import concurrent.futures
 from typing import Callable, Any, TypeVar, cast, Optional
@@ -24,7 +25,7 @@ def init_thread_pools(io_pool_size: int = 10, cpu_pool_size: int = 0):
     # Calculate actual CPU thread count if not specified
     actual_cpu_pool_size = cpu_pool_size
     if actual_cpu_pool_size <= 0:
-        actual_cpu_pool_size = max(1, concurrent.futures.cpu_count() - 1)
+        actual_cpu_pool_size = max(1, os.cpu_count() - 1)
     
     # Create thread pools
     _io_executor = concurrent.futures.ThreadPoolExecutor(
