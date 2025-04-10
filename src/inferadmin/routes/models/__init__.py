@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from .models import GetModelsResponse, PostModelRequest
+from .models import GetModelsResponse, PostModelRequest, DeleteModelRequest
 
 from .support import scan_hf_models_directory, delete_model, download_hf_model
 
@@ -8,7 +8,7 @@ router = APIRouter(prefix="/models")
 
 @router.get("/list")
 async def get_models() -> GetModelsResponse:
-    models = scan_hf_models_directory()
+    models = await scan_hf_models_directory()
     response = GetModelsResponse(models=models)
     return response
 
@@ -21,6 +21,6 @@ async def post_models(data: PostModelRequest):
         await download_hf_model(repo_id)
 
 
-@router.delete("/{id}/delete")
-async def delete_models(id: str):
-    await delete_model(id)
+@router.post("/delete")
+async def delete_models(data: DeleteModelRequest):
+    await delete_model(data.repo_id)

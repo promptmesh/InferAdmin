@@ -32,3 +32,7 @@ class CompletionResponse(BaseModel):
     text: str
     created: datetime
     usage: Dict[str, int]
+
+
+class ModelIdRequest(BaseModel):
+    model_id: str

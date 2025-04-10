@@ -3,6 +3,8 @@ from .models import (
     GetApplicationsResponse,
     PostApplicationRequest,
     GetApplicationLogsResponse,
+    DeleteApplicationRequest,
+    ApplicationIdRequest,
 )
 from .support import (
     get_all_applications,
@@ -37,26 +39,26 @@ async def post_applications(data: PostApplicationRequest):
     return application
 
 
-@router.delete("/{id}")
-async def delete_applications(id: str) -> bool:
+@router.post("/delete")
+async def delete_applications(data: DeleteApplicationRequest) -> bool:
     """Delete an application by its ID."""
-    return await delete_application(id)
+    return await delete_application(data.id)
 
 
-@router.get("/{id}/logs")
-async def get_application_logs_by_id(id: str, tail: int = Query(100, description="Number of log lines to return")) -> GetApplicationLogsResponse:
+@router.post("/logs")
+async def get_application_logs_by_id(data: ApplicationIdRequest, tail: int = Query(100, description="Number of log lines to return")) -> GetApplicationLogsResponse:
     """Get logs for a specific application by its container ID."""
-    logs = await get_container_logs(id, tail=tail)
-    return GetApplicationLogsResponse(id=id, logs=logs)
+    logs = await get_container_logs(data.id, tail=tail)
+    return GetApplicationLogsResponse(id=data.id, logs=logs)
 
 
-@router.get("/{id}/start")
-async def start_application(id: str) -> bool:
+@router.post("/start")
+async def start_application(data: ApplicationIdRequest) -> bool:
     """Start a stopped application by its container ID."""
-    return await start_container(id)
+    return await start_container(data.id)
 
 
-@router.get("/{id}/stop")
-async def stop_application(id: str) -> bool:
+@router.post("/stop")
+async def stop_application(data: ApplicationIdRequest) -> bool:
     """Stop a running application by its container ID."""
-    return await stop_container(id)
+    return await stop_container(data.id)

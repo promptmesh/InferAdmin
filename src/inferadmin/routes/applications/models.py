@@ -31,3 +31,11 @@ class PostApplicationRequest(BaseModel):
 class GetApplicationLogsResponse(BaseModel):
     id: str
     logs: str
+
+
+class DeleteApplicationRequest(BaseModel):
+    id: str
+
+
+class ApplicationIdRequest(BaseModel):
+    id: str

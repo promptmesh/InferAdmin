@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException
 
-from .models import GetImagesResponse, PostImageRequest, DockerImage
+from .models import GetImagesResponse, PostImageRequest, DockerImage, DeleteImageRequest
 from .support import pull_container_image, get_container_images, remove_container_image
 
 from datetime import datetime
@@ -77,12 +77,12 @@ async def post_images(data: PostImageRequest):
         raise HTTPException(status_code=500, detail=f"Failed to pull image: {str(e)}")
 
 
-@router.delete("/{id}/delete")
-async def delete_images(id: str):
+@router.delete("/delete")
+async def delete_images(data: DeleteImageRequest):
     """Delete a docker image"""
     try:
         # Use the support function to remove the image
-        await remove_container_image(id)
-        return {"status": "success", "message": f"Image {id} deleted successfully"}
+        await remove_container_image(data.id)
+        return {"status": "success", "message": f"Image {data.id} deleted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to delete image: {str(e)}")
