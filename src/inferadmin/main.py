@@ -7,6 +7,6 @@ app = FastAPI(
     title="InferAdmin",
     description="A lightweight management interface for local LLM infrastructure.",
     tags_metadata=tags_metadata,
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 app.include_router(router=router)

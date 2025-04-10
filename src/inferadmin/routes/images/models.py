@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 from datetime import datetime
 
+
 class DockerImage(BaseModel):
     repo: str
     id: str
@@ -9,11 +10,14 @@ class DockerImage(BaseModel):
     created: datetime
     size: float
 
+
 class GetImagesResponse(BaseModel):
     images: list[DockerImage]
 
+
 class PostImageRequest(BaseModel):
     repo: str
+
 
 class DeleteImageRequest(BaseModel):
     id: str

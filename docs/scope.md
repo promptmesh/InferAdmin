@@ -3,15 +3,16 @@
 ## Features:
 - Local Model storage
     - Unified location
-    - Downloading models
+    - Downloading models (asynchronously)
     - Updating models
-    - Deleting models
+    - Deleting models (asynchronously)
     - Storage available
 
 - Deploy vLLM docker
-    - Deploy instance
-    - Stop instance
+    - Deploy instance (asynchronously)
+    - Stop instance (asynchronously)
     - Status of instance (Docker health check)
+    - Attach GPUs to instance
 
 - vLLM container version control
     - Dropdown for selecting vLLM container version
@@ -22,13 +23,19 @@
     - Initial config
     - Status
     - Delete
-    - Stopping
+    - Stopping (asynchronously)
     - Status of instance (Docker health check)
 
 - GPU state
     - Vram load
     - Utilization
-    - Power consumption?
+    - Power consumption
+
+- Async operations for IO-bound tasks
+    - Container management
+    - Image operations
+    - Model downloads
+    - Graceful thread pool shutdown
 
 - Use health checks for containers
 - Unified local model location
@@ -45,23 +52,32 @@
 - Refresh interval for gpu state
 - Refresh interval for container state
 - HF token
+- Thread pool sizes for IO and CPU operations
 
 ## Operating Data
 - What assets are deployed via docker
+- Thread pool utilization metrics
+
+## Architecture
+- Async operations with specialized thread pools
+- FastApi with asyncio for non-blocking event loop
+- Proper exception handling and propagation
+- Graceful application shutdown
 
 ## Stack
 - Deploy InferAdmin in docker
 - InferAdmin interacts with host docker to deploy docker containers for inference/interface
-- FastApi for backend
-- Frontend html/css/js (maybe do VueJS)
+- FastApi for backend (async mode)
+- Frontend Vue JS + Shadcn
 - YML for config and data, pydantic for representation
 
 ## Ideas
-- Gpu assignment per instance VIA nvidia-smi UUID for GPUs
-- Proxy server in front of vLLM to handle loading/unloading of models
-- Stuff other than vLLM
+- Proxying inference requests in front of vLLM to route to correct model
+    - Placeholding /llms endpoint for this functionality
+- Engines other than vLLM
 - Have multiple storage locations
 - Add analytics for vLLM instances collected from vLLM's prometheus instance
+- Enhanced logging system to replace print statements
 
 ## Initial assumption
 - Nvidia gpus
