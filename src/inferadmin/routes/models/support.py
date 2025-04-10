@@ -6,10 +6,10 @@ from datetime import datetime
 import time
 import shutil
 from fastapi import HTTPException
-
 from .models import Model
 from inferadmin.common.async_utils import to_async_io
 from inferadmin.config.loader import config_manager
+from inferadmin.common.logging import logger
 
 
 def check_hf_model_exists(model_path):
@@ -36,7 +36,6 @@ def check_hf_model_exists(model_path):
         "tokenizer.json",
         "special_tokens_map.json",
         "tokenizer_config.json",
-        "vocab.json",
     ]
 
     # Check each required file
@@ -114,7 +113,7 @@ def get_most_recent_modified_date(folder_path):
 
     return modified_date
 
-
+@to_async_io  # Using IO-optimized thread pool for file system operations
 def scan_hf_models_directory():
     """
     Scan a directory for Hugging Face models and collect info about each valid model.
@@ -169,7 +168,9 @@ def delete_model(repo_id: str):
         model_name (str): hf_model name
     """
     folder_name = repo_id.replace("/", "_")
+    logger.info(f"Deleting model folder: {folder_name}")
     folder_path = f"{config_manager.get_config().model_storage_path}/{folder_name}"
+    logger.info(f"Folder path: {folder_path}")
 
     path = Path(folder_path)
 
