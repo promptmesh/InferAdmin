@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import command_section from './components/header/CommandSection.vue';
-import LogoArea from './components/header/LogoArea.vue';
-import { Button } from '@/components/ui/button'
+import command_section from "./components/header/CommandSection.vue";
+import LogoArea from "./components/header/LogoArea.vue";
+import { Button } from "@/components/ui/button";
+import GpuView from "./components/gpus/GpuView.vue";
 </script>
 
 <template>
@@ -12,13 +13,11 @@ import { Button } from '@/components/ui/button'
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
-    <div class="mt-">
-
-    </div>
+    <div class="mt-"></div>
   </div>
-  <logo-area/>
-  <command_section/>
-  
+  <logo-area />
+  <command_section />
+  <gpu-view />
 </template>
 
 <style scoped>
