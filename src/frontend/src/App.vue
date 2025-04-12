@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Header from "./components/header/Header.vue";
+import GpuContainer from "./components/gpus/gpuContainer.vue";
 </script>
 
 <template>
@@ -11,6 +12,9 @@ import Header from "./components/header/Header.vue";
       </div>
     </main>
   </div>
+  <logo-area />
+  <command_section />
+  <GpuContainer />
 </template>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <div class="gpu-container">
-    <div class="gpu-card">
+    <div class="gpu-card" :class="{ inactive: !gpu.active }">
       <h2>{{ gpu.name }}</h2>
       <div class="gpu-stats">
         <div class="stat">
@@ -47,19 +47,11 @@
 <script>
 export default {
   name: "GpuView",
-  data() {
-    return {
-      gpu: {
-        name: "Nvidia RTX 3090",
-        vram: 24,
-        vramUsage: 80, // Percentage
-        utilization: 100, // Percentage
-        power: 350,
-        powerUsage: 90, // Percentage
-        uuid: "8165",
-        assignment: "vLLM Instance 1",
-      },
-    };
+  props: {
+    gpu: {
+      type: Object,
+      required: true,
+    },
   },
 };
 </script>
@@ -82,10 +74,18 @@ export default {
   font-family: Arial, sans-serif;
 }
 
+.inactive {
+  color: #9aa6b8;
+}
+
+.inactive .progress {
+  background: #e0e0e0;
+}
+
 h2 {
   font-size: 18px;
   margin-bottom: 10px;
-  color: #333;
+  color: inherit;
 }
 
 .gpu-stats {
