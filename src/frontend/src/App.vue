@@ -5,15 +5,17 @@ import { Button } from '@/components/ui/button'
 
 <template>
   <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
+    <a href="https://inferadmin.com" target="_blank">
+      <img src="/inferadmin_logo.svg" class="logo" alt="InferAdmin logo" />
     </a>
     <a href="https://vuejs.org/" target="_blank">
       <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
     </a>
-    <Button>Click me</Button>
+    <div class="mt-">
+
+    </div>
   </div>
-  <HelloWorld msg="Vite + Vue" />
+  <HelloWorld msg="InferAdmin + Vue" />
 </template>
 
 <style scoped>
