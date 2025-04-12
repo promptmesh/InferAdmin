@@ -6,15 +6,14 @@ import GpuContainer from "./components/gpus/gpuContainer.vue";
 <template>
   <div class="app-container">
     <Header />
+    <logo-area />
+    <command_section />
     <main class="content-container">
       <div class="content">
-        <!-- Page content goes here -->
+        <GpuContainer />
       </div>
     </main>
   </div>
-  <logo-area />
-  <command_section />
-  <GpuContainer />
 </template>
 
 <style scoped>
