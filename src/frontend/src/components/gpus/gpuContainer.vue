@@ -1,6 +1,6 @@
 <template>
   <div class="gpus-container">
-    <h1>GPUs</h1>
+    <h2>GPUs</h2>
     <div class="gpu-grid">
       <GpuView v-for="(gpu, index) in gpus" :key="index" :gpu="gpu" />
     </div>
@@ -74,7 +74,8 @@ export default {
   background-color: #f5f7f9;
 }
 
-h1 {
+h2 {
+  font-size: 24px;
   text-align: center;
   margin-bottom: 30px;
   color: #333;
