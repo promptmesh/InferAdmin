@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
+import command_section from './components/header/CommandSection.vue';
+import LogoArea from './components/header/LogoArea.vue';
 import { Button } from '@/components/ui/button'
 </script>
 
@@ -15,7 +16,9 @@ import { Button } from '@/components/ui/button'
 
     </div>
   </div>
-  <HelloWorld msg="InferAdmin + Vue" />
+  <logo-area/>
+  <command_section/>
+  
 </template>
 
 <style scoped>
