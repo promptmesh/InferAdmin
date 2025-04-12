@@ -15,3 +15,6 @@ config.yml
 
 # repomix
 repomix-output.xml
+
+*.log
+.env
