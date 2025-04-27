@@ -6,15 +6,15 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandSeparator,
-  CommandShortcut,
+  CommandSeparator
 } from "@/components/ui/command";
 
 import { Gauge, FileBox, Container, Box, Settings } from "lucide-vue-next";
 import { ref, onMounted, onUnmounted } from "vue";
 
 const isOpen = ref(false);
-const inputRef = ref(null);
+import type { Ref } from 'vue'
+const inputRef = ref<HTMLInputElement | null>(null);
 const commandContainer = ref(null);
 
 const handleFocus = () => {
@@ -36,8 +36,8 @@ const handleKeydown = (event: KeyboardEvent) => {
   }
 };
 
-const handleClickOutside = (event) => {
-  if (!commandContainer.value.contains(event.target)) {
+const handleClickOutside = (event: MouseEvent) => {
+  if (commandContainer.value && !commandContainer.value.contains(event.target as Node)) {
     isOpen.value = false;
   }
 };
@@ -65,6 +65,7 @@ const selectItem = () => {
         ref="inputRef"
         placeholder="Type a command or search..."
         @focus="handleFocus"
+        @mousedown="isOpen = true"
       />
 
       <div

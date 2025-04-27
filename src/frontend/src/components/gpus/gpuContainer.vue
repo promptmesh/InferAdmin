@@ -1,90 +1,71 @@
 <template>
   <div class="gpus-container">
-    <h2>GPUs</h2>
-    <div class="gpu-grid">
-      <GpuView v-for="(gpu, index) in gpus" :key="index" :gpu="gpu" />
+    <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 tracking-tight">Compute Resources</h2>
+    <div :class="[
+      'w-full pb-2',
+      gpus.length <= 3
+        ? 'flex justify-center gap-4 flex-wrap'
+        : 'flex flex-row gap-4 overflow-x-auto'
+    ]">
+      <GpuCard v-for="(gpu, index) in gpus" :key="index" :gpu="gpu"
+        :state="
+          index === 0 ? 'active' :
+          index === 1 ? 'selected' :
+          index === 2 ? 'unavailable' :
+          'unselected'"
+      />
     </div>
   </div>
 </template>
 
-<script>
-import GpuView from "./gpuView.vue";
+<script setup lang="ts">
+import GpuCard from './GpuCard.vue'
 
-export default {
-  name: "GpuContainer",
-  components: {
-    GpuView,
+// Keep the same GPU mock data as before
+const gpus = [
+  {
+    name: "Nvidia RTX 3090",
+    vram: 24,
+    vramUsage: 80,
+    utilization: 60,
+    power: 350,
+    powerUsage: 90,
+    uuid: "8165",
+    assignment: "vLLM Instance 1",
+    active: true,
   },
-  data() {
-    return {
-      gpus: [
-        {
-          name: "Nvidia RTX 3090",
-          vram: 24,
-          vramUsage: 80, // Active
-          utilization: 60,
-          power: 350,
-          powerUsage: 90,
-          uuid: "8165",
-          assignment: "vLLM Instance 1",
-          active: true,
-        },
-        {
-          name: "Nvidia RTX 3090",
-          vram: 24,
-          vramUsage: 70, // Active
-          utilization: 50,
-          power: 350,
-          powerUsage: 80,
-          uuid: "8165",
-          assignment: "vLLM Instance 1",
-          active: true,
-        },
-        {
-          name: "Nvidia RTX 3090",
-          vram: 24,
-          vramUsage: 0, // Inactive
-          utilization: 0,
-          power: 350,
-          powerUsage: 0,
-          uuid: "8165",
-          assignment: "None",
-          active: false,
-        },
-        {
-          name: "Nvidia RTX 3090",
-          vram: 24,
-          vramUsage: 0, // Inactive
-          utilization: 0,
-          power: 350,
-          powerUsage: 0,
-          uuid: "8165",
-          assignment: "None",
-          active: false,
-        },
-      ],
-    };
+  {
+    name: "Nvidia RTX 3090",
+    vram: 24,
+    vramUsage: 70,
+    utilization: 50,
+    power: 350,
+    powerUsage: 80,
+    uuid: "8165",
+    assignment: "vLLM Instance 1",
+    active: true,
   },
-};
+  {
+    name: "Nvidia RTX 3090",
+    vram: 24,
+    vramUsage: 0,
+    utilization: 0,
+    power: 350,
+    powerUsage: 0,
+    uuid: "8165",
+    assignment: "None",
+    active: false,
+  },
+  {
+    name: "Nvidia RTX 3090",
+    vram: 24,
+    vramUsage: 0,
+    utilization: 0,
+    power: 350,
+    powerUsage: 0,
+    uuid: "8165",
+    assignment: "None",
+    active: false,
+  },
+]
 </script>
-
-<style scoped>
-.gpus-container {
-  padding: 20px;
-  background-color: #f5f7f9;
-}
-
-h2 {
-  font-size: 24px;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
-}
-
-.gpu-grid {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: row;
-  justify-content: center;
-}
-</style>

@@ -1,15 +1,16 @@
 <script setup lang="ts">
 import Header from "./components/header/Header.vue";
+import CentralTable from "./components/centraltable/CentralTable.vue";
 import GpuContainer from "./components/gpus/gpuContainer.vue";
 </script>
+
 
 <template>
   <div class="app-container">
     <Header />
-    <logo-area />
-    <command_section />
     <main class="content-container">
       <div class="content">
+        <CentralTable />
         <GpuContainer />
       </div>
     </main>
