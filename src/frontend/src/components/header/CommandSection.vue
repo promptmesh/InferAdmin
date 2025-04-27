@@ -10,10 +10,40 @@ import {
 } from "@/components/ui/command";
 
 import { Gauge, FileBox, Container, Box, Settings } from "lucide-vue-next";
+import NewApplicationDrawer from '../drawers/NewApplicationDrawer.vue' // Adjust path if needed
+import NewImageDrawer from '../drawers/NewImageDrawer.vue'
+
+
+// Dummy data for demonstration (replace with real data from store or props)
+const dummyModels = [
+  {
+    repo_id: 'meta/llama-2-70b',
+    path: 'models/llama-2-70b',
+    size_gb: 40,
+    last_updated: '2025-04-01T12:00:00Z',
+  },
+  {
+    repo_id: 'openai/gpt-4',
+    path: 'models/gpt-4',
+    size_gb: 50,
+    last_updated: '2025-03-15T08:00:00Z',
+  }
+]
+const dummyGpuList = ['gpu-1', 'gpu-2', 'gpu-3']
+const dummyGpuDetails = {
+  'gpu-1': { uuid: 'gpu-1', name: 'NVIDIA A100', vram: 40 },
+  'gpu-2': { uuid: 'gpu-2', name: 'NVIDIA H100', vram: 80 },
+  'gpu-3': { uuid: 'gpu-3', name: 'NVIDIA RTX 4090', vram: 24 }
+}
+
 import { ref, onMounted, onUnmounted } from "vue";
 
 const isOpen = ref(false);
-import type { Ref } from 'vue'
+const showNewAppDrawer = ref(false)
+const showNewImageDrawer = ref(false)
+const newAppType = ref<'inference' | 'application' | null>(null)
+
+
 const inputRef = ref<HTMLInputElement | null>(null);
 const commandContainer = ref(null);
 
@@ -52,6 +82,20 @@ onUnmounted(() => {
   document.removeEventListener("mousedown", handleClickOutside);
 });
 
+function handleCommand(action: string) {
+  if (action === 'launch-inference') {
+    showNewAppDrawer.value = true
+    newAppType.value = 'inference'
+  } else if (action === 'launch-application') {
+    showNewAppDrawer.value = true
+    newAppType.value = 'application'
+  } else if (action === 'pull-docker-image') {
+    showNewImageDrawer.value = true
+  }
+  isOpen.value = false;
+  inputRef.value?.blur();
+}
+
 const selectItem = () => {
   isOpen.value = false;
   inputRef.value?.blur();
@@ -75,19 +119,20 @@ const selectItem = () => {
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
           <CommandGroup heading="Suggestions">
-            <CommandItem value="launch-inference" @click="selectItem">
+            <CommandItem value="launch-inference" @click="() => handleCommand('launch-inference')">
               <Gauge />
               <span>Launch Inference Engine</span>
             </CommandItem>
-            <CommandItem value="launch-application" @click="selectItem">
+            <CommandItem value="launch-application" @click="() => handleCommand('launch-application')">
               <Container />
               <span>Launch Application</span>
             </CommandItem>
+
             <CommandItem value="pull-hf-model" @click="selectItem">
               <FileBox />
               <span>Pull HuggingFace Model</span>
             </CommandItem>
-            <CommandItem value="pull-docker-image" @click="selectItem">
+            <CommandItem value="pull-docker-image" @click="() => handleCommand('pull-docker-image')">
               <Box />
               <span>Pull Docker Images</span>
             </CommandItem>
@@ -103,7 +148,26 @@ const selectItem = () => {
       </div>
     </Command>
   </div>
+    <NewApplicationDrawer
+      v-if="showNewAppDrawer"
+      :open="showNewAppDrawer"
+      :onClose="() => { showNewAppDrawer = false }"
+      :modelOptions="dummyModels"
+      :gpuList="dummyGpuList"
+      :gpuDetails="dummyGpuDetails"
+      @submit="() => { showNewAppDrawer = false; /* handle submit here */ }"
+      
+    />
+  <NewImageDrawer
+    :open="showNewImageDrawer"
+    :onClose="() => showNewImageDrawer = false"
+    :volumeUsed="24"
+    :volumeTotal="100"
+    volumeLabel="Volume A"
+    @submit="(payload) => { showNewImageDrawer = false; /* handle payload.repoStr here */ }"
+  />
 </template>
+
 
 <style scoped>
 .absolute {
