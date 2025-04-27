@@ -12,6 +12,7 @@ import {
 import { Gauge, FileBox, Container, Box, Settings } from "lucide-vue-next";
 import NewApplicationDrawer from '../drawers/NewApplicationDrawer.vue' // Adjust path if needed
 import NewImageDrawer from '../drawers/NewImageDrawer.vue'
+import NewModelDrawer from '../drawers/NewModelDrawer.vue'
 
 
 // Dummy data for demonstration (replace with real data from store or props)
@@ -41,6 +42,7 @@ import { ref, onMounted, onUnmounted } from "vue";
 const isOpen = ref(false);
 const showNewAppDrawer = ref(false)
 const showNewImageDrawer = ref(false)
+const showNewModelDrawer = ref(false)
 const newAppType = ref<'inference' | 'application' | null>(null)
 
 
@@ -91,6 +93,8 @@ function handleCommand(action: string) {
     newAppType.value = 'application'
   } else if (action === 'pull-docker-image') {
     showNewImageDrawer.value = true
+  } else if (action === 'pull-hf-model') {
+    showNewModelDrawer.value = true
   }
   isOpen.value = false;
   inputRef.value?.blur();
@@ -128,7 +132,7 @@ const selectItem = () => {
               <span>Launch Application</span>
             </CommandItem>
 
-            <CommandItem value="pull-hf-model" @click="selectItem">
+            <CommandItem value="pull-hf-model" @click="() => handleCommand('pull-hf-model')">
               <FileBox />
               <span>Pull HuggingFace Model</span>
             </CommandItem>
@@ -165,6 +169,14 @@ const selectItem = () => {
     :volumeTotal="100"
     volumeLabel="Volume A"
     @submit="(payload) => { showNewImageDrawer = false; /* handle payload.repoStr here */ }"
+  />
+  <NewModelDrawer
+    :open="showNewModelDrawer"
+    :onClose="() => showNewModelDrawer = false"
+    :volumeUsed="24"
+    :volumeTotal="100"
+    volumeLabel="Volume A"
+    @submit="({ hfId }) => { showNewModelDrawer = false; /* handle hfId here */ }"
   />
 </template>
 
