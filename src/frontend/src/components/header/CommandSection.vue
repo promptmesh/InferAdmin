@@ -13,6 +13,7 @@ import { Gauge, FileBox, Container, Box, Settings } from "lucide-vue-next";
 import NewApplicationDrawer from '../drawers/NewApplicationDrawer.vue' // Adjust path if needed
 import NewImageDrawer from '../drawers/NewImageDrawer.vue'
 import NewModelDrawer from '../drawers/NewModelDrawer.vue'
+import SettingsButton from './SettingsButton.vue'
 
 
 // Dummy data for demonstration (replace with real data from store or props)
@@ -107,10 +108,12 @@ const selectItem = () => {
 </script>
 
 <template>
-  <div class="relative" ref="commandContainer">
+  <div class="flex items-center justify-between w-full max-w-xl mx-auto px-2">
+    <div class="relative flex-1" ref="commandContainer">
     <Command>
       <CommandInput
         ref="inputRef"
+        class="w-full min-w-0"
         placeholder="Type a command or search..."
         @focus="handleFocus"
         @mousedown="isOpen = true"
@@ -118,7 +121,7 @@ const selectItem = () => {
 
       <div
         v-if="isOpen"
-        class="absolute top-full left-0 right-0 mt-2 bg-background rounded-md border shadow-lg z-50"
+        class="absolute top-full left-0 right-0 mt-2 bg-background rounded-md border shadow-lg z-50 max-w-full"
       >
         <CommandList>
           <CommandEmpty>No results found.</CommandEmpty>
@@ -142,12 +145,7 @@ const selectItem = () => {
             </CommandItem>
           </CommandGroup>
           <CommandSeparator />
-          <CommandGroup heading="Settings">
-            <CommandItem value="config" @click="selectItem">
-              <Settings />
-              <span>Configuration</span>
-            </CommandItem>
-          </CommandGroup>
+
         </CommandList>
       </div>
     </Command>
@@ -178,6 +176,7 @@ const selectItem = () => {
     volumeLabel="Volume A"
     @submit="({ hfId }) => { showNewModelDrawer = false; /* handle hfId here */ }"
   />
+  </div>
 </template>
 
 
